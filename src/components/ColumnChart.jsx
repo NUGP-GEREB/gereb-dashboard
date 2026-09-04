@@ -85,7 +85,10 @@ export function ColumnChart({ title, subtitle, groups, info }) {
           Ver mais
         </button>
       </div>
-      <div className="column-chart">
+      <div
+        className="column-chart"
+        style={{ '--column-group-count': groups.length }}
+      >
         {groups.map((group) => (
           <div className="column-group" key={group.label}>
             <div className="columns">

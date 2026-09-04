@@ -166,18 +166,20 @@ export function DonutChart({
             </text>
           </svg>
         </div>
-        <div
-          className={activeSlice !== null ? 'donut-active-summary is-visible' : 'donut-active-summary'}
-          aria-live="polite"
-        >
-          {activeSlice !== null ? (
-            <>
-              <strong>{slices[activeSlice].label}</strong>
-              <span>{slices[activeSlice].valueLabel}</span>
-              <b>{slices[activeSlice].shareLabel}</b>
-            </>
-          ) : null}
-        </div>
+        {!isDetailChart ? (
+          <div
+            className={activeSlice !== null ? 'donut-active-summary is-visible' : 'donut-active-summary'}
+            aria-live="polite"
+          >
+            {activeSlice !== null ? (
+              <>
+                <strong>{slices[activeSlice].label}</strong>
+                <span>{slices[activeSlice].valueLabel}</span>
+                <b>{slices[activeSlice].shareLabel}</b>
+              </>
+            ) : null}
+          </div>
+        ) : null}
         {isDetailChart ? (
           <div className="donut-detail">
             <h3>{detailTitle}</h3>

@@ -20,8 +20,8 @@ import "./styles/dashboard.css";
 const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];
 const ministryOfHealth = "MINISTÉRIO DA SAÚDE";
-const storageKey = "gereb-projects-editable-v3";
-const oldStorageKeys = ["gereb-projects-editable-v1", "gereb-projects-editable-v2"];
+const storageKey = "gereb-projects-editable-v4";
+const oldStorageKeys = ["gereb-projects-editable-v1", "gereb-projects-editable-v2", "gereb-projects-editable-v3"];
 const fullBrl = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",

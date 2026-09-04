@@ -2280,9 +2280,10 @@
 
 .column-chart {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+   grid-template-columns: repeat(var(--column-group-count, 1), minmax(68px, 1fr));
    gap: 12px;
    min-height: 430px;
+   overflow-x: auto;
    padding: 72px 14px 54px;
    border-radius: 10px;
    background: linear-gradient(180deg, rgba(246, 248, 250, 0.92), rgba(246, 248, 250, 0.92)),
@@ -2304,7 +2305,7 @@
 
 .columns {
    display: grid;
-   grid-template-columns: repeat(3, minmax(20px, 1fr));
+   grid-template-columns: repeat(3, minmax(16px, 1fr));
    gap: 7px;
    align-items: end;
    min-height: 300px;
@@ -3256,7 +3257,7 @@ tbody tr.project-detail-row:hover td {
 
   .column-chart {
     overflow-x: auto;
-    grid-template-columns: repeat(10, 120px);
+    grid-template-columns: repeat(var(--column-group-count, 1), 120px);
   }
 
   .donut-stage,
