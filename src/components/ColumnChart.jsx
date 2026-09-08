@@ -17,9 +17,7 @@ const formatMillions = (value) => {
 export function ColumnChart({ title, subtitle, groups, info }) {
   const [summaryOpen, setSummaryOpen] = useState(false)
   const rubrics = ['Realizado', 'Comprometido', 'Saldo']
-  const chartLimit = 10
-  const visibleGroups = groups.slice(0, chartLimit)
-  const max = Math.max(...visibleGroups.flatMap((group) => group.values.map((value) => Math.abs(value))), 1)
+  const max = Math.max(...groups.flatMap((group) => group.values.map((value) => Math.abs(value))), 1)
   const isCoordinationChart = title.startsWith('Realizado, Comprometido')
   const displayTitle = isCoordinationChart
     ? 'Realizado, Comprometido e Saldo por Coordena\u00e7\u00e3o'
@@ -60,7 +58,7 @@ export function ColumnChart({ title, subtitle, groups, info }) {
         title={displayTitle}
         description={displayInfo || 'Grafico comparativo para enxergar realizado, comprometido e saldo lado a lado por grupo.'}
         detail={displaySubtitle || 'Cada cor representa uma rubrica financeira.'}
-        value={`${visibleGroups.length} de ${groups.length} grupos exibidos`}
+        value={`${groups.length} grupos exibidos`}
       />
       <div className="panel-title">
         <div className="title-dot" />
@@ -87,8 +85,8 @@ export function ColumnChart({ title, subtitle, groups, info }) {
           Ver mais
         </button>
       </div>
-      <div className="column-chart" style={{ '--column-group-count': visibleGroups.length }}>
-        {visibleGroups.map((group) => (
+      <div className="column-chart" style={{ '--column-group-count': groups.length }}>
+        {groups.map((group) => (
           <div className="column-group" key={group.label}>
             <div className="columns">
               {group.values.map((value, index) => (
