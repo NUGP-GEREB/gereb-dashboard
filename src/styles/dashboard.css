@@ -1547,8 +1547,21 @@
 }
 
 .axis-overview__header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.axis-overview__header > div {
   display: grid;
   gap: 8px;
+  min-width: 0;
+}
+
+.axis-overview__more {
+  flex: none;
+  margin-left: 0;
 }
 
 .axis-overview__header span {
@@ -1677,6 +1690,52 @@
   font-weight: 400;
 }
 
+.axis-overview-popup__dialog {
+  width: min(1040px, 100%);
+}
+
+.axis-overview-popup__body {
+  padding: 14px;
+}
+
+.axis-overview-table {
+  width: 100%;
+  min-width: 820px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.axis-overview-table th,
+.axis-overview-table td {
+  padding: 10px 12px;
+}
+
+.axis-overview-table th:first-child,
+.axis-overview-table td:first-child {
+  width: 68px;
+  text-align: center;
+}
+
+.axis-overview-table th:nth-child(3),
+.axis-overview-table th:nth-child(4),
+.axis-overview-table th:nth-child(5),
+.axis-overview-table td:nth-child(3),
+.axis-overview-table td:nth-child(4),
+.axis-overview-table td:nth-child(5) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.axis-overview-table td:nth-child(2) {
+  max-width: none;
+  color: var(--blue);
+  font-weight: 500;
+}
+
 @media (max-width: 720px) {
   .axis-overview {
     gap: 24px;
@@ -1686,6 +1745,14 @@
 
   .axis-overview__header h2 {
     font-size: 23px;
+  }
+
+  .axis-overview__header {
+    flex-direction: column;
+  }
+
+  .axis-overview__more {
+    width: 100%;
   }
 
   .axis-overview__rows {

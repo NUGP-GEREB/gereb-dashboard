@@ -23,6 +23,15 @@ export const dateShort = new Intl.DateTimeFormat('pt-BR', {
   year: '2-digit',
 })
 
+export function formatDateShort(dateValue) {
+  if (!dateValue) return 'Sem data'
+
+  const date = new Date(`${dateValue}T12:00:00`)
+  if (Number.isNaN(date.getTime())) return 'Sem data'
+
+  return dateShort.format(date)
+}
+
 export function sumBy(items, key) {
   return items.reduce((total, item) => total + Number(item[key] || 0), 0)
 }
@@ -58,8 +67,12 @@ export function clamp(value, min = 0, max = 100) {
 }
 
 export function daysUntil(dateValue) {
+  if (!dateValue) return null
+
   const today = new Date()
   const end = new Date(`${dateValue}T12:00:00`)
+  if (Number.isNaN(end.getTime())) return null
+
   const ms = end.getTime() - today.getTime()
   return Math.ceil(ms / 86400000)
 }
@@ -67,6 +80,7 @@ export function daysUntil(dateValue) {
 export function lifecycleStatus(project) {
   const days = daysUntil(project.end)
 
+  if (days === null) return { label: 'Sem data', tone: 'warning' }
   if (days < 0) return { label: 'Encerrado', tone: 'danger' }
   if (days <= 90) return { label: 'Crítico', tone: 'danger' }
   if (days <= 240) return { label: 'Atenção', tone: 'warning' }

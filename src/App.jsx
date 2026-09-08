@@ -21,7 +21,11 @@ const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];
 const ministryOfHealth = "MINISTÉRIO DA SAÚDE";
 const storageKey = "gereb-projects-editable-v4";
-const oldStorageKeys = ["gereb-projects-editable-v1", "gereb-projects-editable-v2", "gereb-projects-editable-v3"];
+const oldStorageKeys = [
+  "gereb-projects-editable-v1",
+  "gereb-projects-editable-v2",
+  "gereb-projects-editable-v3",
+];
 const fullBrl = new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
@@ -375,9 +379,10 @@ function App() {
       const supportTedCount = filteredProjects.filter(
         (project) => project.supportTed,
       ).length;
-      const closed = filteredProjects.filter(
-        (project) => new Date(`${project.end}T12:00:00`) < today,
-      ).length;
+      const closed = filteredProjects.filter((project) => {
+        const end = new Date(`${project.end}T12:00:00`);
+        return !Number.isNaN(end.getTime()) && end < today;
+      }).length;
 
       return {
         projects: filteredProjects.length,
@@ -393,6 +398,8 @@ function App() {
         active: filteredProjects.length - closed,
         expiring: filteredProjects.filter((project) => {
           const end = new Date(`${project.end}T12:00:00`);
+          if (Number.isNaN(end.getTime())) return false;
+
           const days = Math.ceil((end.getTime() - today.getTime()) / 86400000);
           return days >= 0 && days <= 180;
         }).length,
@@ -487,11 +494,11 @@ function App() {
 
   const dashboardCards = [
     {
-      label: "Projetos Filtrados",
+      label: "Projetos Vigentes",
       value: totals.projects,
       tone: "neutral",
       icon: "grid",
-      info: "Linhas da planilha que entram no recorte atual.",
+      info: "Projetos da base que entram no recorte atual.",
     },
     {
       label: "TED de Suporte",

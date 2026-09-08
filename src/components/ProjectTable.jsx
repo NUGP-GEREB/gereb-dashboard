@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState } from 'react'
 import { CardHelpButton } from './CardHelpButton'
-import { brl, dateShort, lifecycleStatus, percent } from '../utils/formatters'
+import { brl, formatDateShort, lifecycleStatus, percent } from '../utils/formatters'
 
 const pageSize = 12
 
@@ -213,8 +213,8 @@ function downloadXlsx(projects) {
       { value: project.funder },
       { value: project.instrumentNumber },
       { value: project.nature },
-      { value: dateShort.format(new Date(`${project.start}T12:00:00`)) },
-      { value: dateShort.format(new Date(`${project.end}T12:00:00`)) },
+      { value: formatDateShort(project.start) },
+      { value: formatDateShort(project.end) },
       { value: project.axis },
       { value: project.total, type: 'number', style: 4 },
       { value: project.budgetBalance, type: 'number', style: 4 },
@@ -335,8 +335,8 @@ function projectDetails(project) {
     ['Objetivo geral', project.objective],
     ['Processo', project.process],
     ['Eixo estratégico', project.axis],
-    ['Início da vigência', dateShort.format(new Date(`${project.start}T12:00:00`))],
-    ['Fim da vigência', dateShort.format(new Date(`${project.end}T12:00:00`))],
+    ['Início da vigência', formatDateShort(project.start)],
+    ['Fim da vigência', formatDateShort(project.end)],
     ['Saldo orçamentário', brl.format(project.budgetBalance)],
     ['Recurso a receber', brl.format(project.receivable)],
     ['Rendimentos', brl.format(project.earnings)],
@@ -450,8 +450,8 @@ export function ProjectTable({ projects }) {
                     <td>{project.nature}</td>
                     <td>{project.supportTed ? 'Sim' : 'Não'}</td>
                     <td>
-                      {dateShort.format(new Date(project.start + 'T12:00:00'))}
-                      <span>{dateShort.format(new Date(project.end + 'T12:00:00'))}</span>
+                      {formatDateShort(project.start)}
+                      <span>{formatDateShort(project.end)}</span>
                     </td>
                     <td className="sr-cell">
                       <span className={'status status--' + status.tone}>{status.label}</span>

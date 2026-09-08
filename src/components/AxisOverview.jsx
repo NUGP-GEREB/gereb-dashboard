@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { percent } from '../utils/formatters'
 
 const fullBrl = new Intl.NumberFormat('pt-BR', {
@@ -8,18 +9,32 @@ const fullBrl = new Intl.NumberFormat('pt-BR', {
 })
 
 export function AxisOverview({ title, items, limit = 6 }) {
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const visible = items.slice(0, limit)
   const total = items.reduce((sum, item) => sum + Number(item.value || 0), 0)
   const max = Math.max(...visible.map((item) => Math.abs(item.value || 0)), 1)
+  const canShowDetails = items.length > limit
 
   return (
     <section className="panel axis-overview" aria-label={title}>
       <header className="axis-overview__header">
-        <span>FIOCRUZ · MAPA ESTRATÉGICO</span>
-        <h2>Valor contratado por eixo</h2>
-        <p>
-          Total: <strong>{fullBrl.format(total)}</strong>
-        </p>
+        <div>
+          <span>{'FIOCRUZ \u00b7 MAPA ESTRAT\u00c9GICO'}</span>
+          <h2>Valor contratado por eixo</h2>
+          <p>
+            Total: <strong>{fullBrl.format(total)}</strong>
+          </p>
+        </div>
+        {canShowDetails ? (
+          <button
+            className="panel-action-button axis-overview__more"
+            type="button"
+            onClick={() => setDetailsOpen(true)}
+            aria-haspopup="dialog"
+          >
+            Ver mais
+          </button>
+        ) : null}
       </header>
 
       {visible.length ? (
@@ -51,7 +66,63 @@ export function AxisOverview({ title, items, limit = 6 }) {
         <div className="axis-overview__empty">Sem eixos para os filtros atuais.</div>
       )}
 
-      <footer className="axis-overview__source">Fonte: Sistema de gestão de contratos</footer>
+      <footer className="axis-overview__source">{'Fonte: Sistema de gest\u00e3o de contratos'}</footer>
+
+      {detailsOpen ? (
+        <div
+          className="coordination-popup axis-overview-popup"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setDetailsOpen(false)
+          }}
+        >
+          <div
+            className="coordination-popup__dialog axis-overview-popup__dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="axis-overview-popup-title"
+          >
+            <div className="coordination-popup__header">
+              <div>
+                <span>Detalhamento</span>
+                <h3 id="axis-overview-popup-title">Valor contratado por eixo</h3>
+              </div>
+              <button
+                className="coordination-popup__close"
+                type="button"
+                onClick={() => setDetailsOpen(false)}
+                aria-label="Fechar tabela"
+              >
+                Fechar
+              </button>
+            </div>
+            <div className="coordination-popup__body axis-overview-popup__body">
+              <table className="axis-overview-table">
+                <thead>
+                  <tr>
+                    <th>Pos.</th>
+                    <th>Eixo</th>
+                    <th>Valor contratado</th>
+                    <th>{'Participa\u00e7\u00e3o'}</th>
+                    <th>Projetos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item, index) => (
+                    <tr key={`${item.label}-axis-detail`}>
+                      <td>{String(index + 1).padStart(2, '0')}</td>
+                      <td>{item.label}</td>
+                      <td className="money-cell">{fullBrl.format(item.value)}</td>
+                      <td>{percent.format(total ? item.value / total : 0)}</td>
+                      <td>{item.count || 0}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </section>
   )
 }
