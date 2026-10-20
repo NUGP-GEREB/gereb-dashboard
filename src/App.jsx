@@ -17,6 +17,7 @@ import {
 } from "./utils/formatters";
 import "./styles/dashboard.css";
 import "./styles/layout-preview.css";
+import "./styles/popup-tables.css";
 
 const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];

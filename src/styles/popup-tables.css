@@ -1,0 +1,59 @@
+/* Shared presentation for every financial table dialog. */
+.finance-dashboard.layout-preview .coordination-popup__dialog {
+  max-height: min(88dvh, 900px);
+  border: 1px solid #e1e7ef;
+  border-radius: 12px;
+  background: #fff;
+  color: #52677e;
+  box-shadow: 0 20px 70px #15314b26;
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+.finance-dashboard.layout-preview .coordination-popup__dialog:not(dialog),
+.finance-dashboard.layout-preview .ranking-details-dialog[open] { display: flex; flex-direction: column; }
+.finance-dashboard.layout-preview .coordination-popup__header {
+  flex-shrink: 0;
+  gap: 24px;
+  padding: 22px 26px;
+  border-bottom: 1px solid #e8edf3;
+  background: #fff;
+}
+.finance-dashboard.layout-preview .coordination-popup__header span { color: #8797a9; font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; }
+.finance-dashboard.layout-preview .coordination-popup__header h3 { margin-top: 7px; color: #284562; font-size: 18px; font-weight: 500; line-height: 1.45; letter-spacing: -.02em; }
+.finance-dashboard.layout-preview .coordination-popup__header p { color: #8392a3; font-weight: 400; font-size: 11px; }
+.finance-dashboard.layout-preview .coordination-popup__close { flex-shrink: 0; height: 34px; border: 1px solid #dee6ef; border-radius: 6px; background: #f8fafc; color: #58708a; font-size: 11px; font-weight: 400; }
+.finance-dashboard.layout-preview .coordination-popup__close:hover { background: #edf3fa; color: #2a527b; border-color: #c6d6e7; }
+.finance-dashboard.layout-preview .coordination-popup__body { min-height: 0; padding: 12px 24px 24px; overflow: auto; background: #fff; scrollbar-width: thin; scrollbar-color: #ccd8e6 #fff; }
+.finance-dashboard.layout-preview .coordination-popup__dialog table { width: 100%; border: 0; border-radius: 0; border-collapse: separate; border-spacing: 0; overflow: visible; background: #fff; font-weight: 400; }
+.finance-dashboard.layout-preview .coordination-popup__dialog :is(th, td) { border: 0; border-bottom: 1px solid #eaf0f5; padding: 13px 14px; background: #fff; font-size: 12px; font-weight: 400; line-height: 1.65; vertical-align: top; font-variant-numeric: tabular-nums; }
+.finance-dashboard.layout-preview .coordination-popup__dialog thead th { position: sticky; top: 0; z-index: 2; background: #f5f8fb; border-bottom-color: #dce5ef; color: #72859a; font-size: 10px; font-weight: 500; text-transform: none; letter-spacing: .02em; }
+.finance-dashboard.layout-preview .coordination-popup__dialog tbody td { color: #52677e; }
+.finance-dashboard.layout-preview .coordination-popup__dialog tbody td:nth-child(2) { font-weight: 400; color: #3f6285; }
+.finance-dashboard.layout-preview .coordination-popup__dialog tbody tr:nth-child(even) td { background: #fbfcfe; }
+.finance-dashboard.layout-preview .coordination-popup__dialog tbody tr:hover td { background: #eff5fb; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .money-cell { font-weight: 400; color: #3d5975; white-space: nowrap; text-align: right; }
+.finance-dashboard.layout-preview .coordination-popup__dialog :is(strong, b) { font-weight: 400; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .ranking-details-table :is(th,td):nth-child(3) { font-size: 12px; line-height: 1.65; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .ranking-details-table td:nth-child(2) { font-size: 12px; }
+.finance-dashboard.layout-preview .coordination-popup__dialog tfoot :is(th,td) { background: #f1f6fc; border-top: 1px solid #dce6f0; border-bottom: 0; color: #3d5a79; font-weight: 500; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table,
+.finance-dashboard.layout-preview .coordination-popup__dialog .summary-table--popup { margin: 0; border: 0; border-radius: 0; background: #fff; overflow: visible; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table__row,
+.finance-dashboard.layout-preview .coordination-popup__dialog .summary-table--popup .summary-table__row { min-height: 46px; padding: 13px 14px; gap: 18px; border: 0; border-bottom: 1px solid #eaf0f5; background: #fff; color: #52677e; font-size: 12px; font-weight: 400; line-height: 1.65; font-variant-numeric: tabular-nums; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table__row:nth-child(odd):not(:first-child),
+.finance-dashboard.layout-preview .coordination-popup__dialog .summary-table--popup .summary-table__row:nth-child(odd):not(:first-child) { background: #fbfcfe; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table__row:not(:first-child):hover,
+.finance-dashboard.layout-preview .coordination-popup__dialog .summary-table--popup .summary-table__row:not(:first-child):hover { background: #eff5fb; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table__row--head,
+.finance-dashboard.layout-preview .coordination-popup__dialog .summary-table--popup .summary-table__row--head { position: sticky; top: 0; z-index: 2; background: #f5f8fb; color: #72859a; border-bottom: 1px solid #dce5ef; font-size: 10px; font-weight: 500; text-transform: none; letter-spacing: .02em; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table__row > :not(:first-child) { text-align: right; white-space: nowrap; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .coordination-table__row > strong,
+.finance-dashboard.layout-preview .coordination-popup__dialog .summary-table__row > strong { color: #3f6285; font-size: 12px; font-weight: 400; white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; }
+.finance-dashboard.layout-preview .coordination-popup__dialog .is-negative { color: #b55465; }
+@media (max-width: 640px) {
+  .finance-dashboard.layout-preview .coordination-popup { padding: 12px; }
+  .finance-dashboard.layout-preview .coordination-popup__header { padding: 17px 16px; gap: 14px; }
+  .finance-dashboard.layout-preview .coordination-popup__header h3 { font-size: 16px; }
+  .finance-dashboard.layout-preview .coordination-popup__body { padding: 10px 12px 16px; }
+  .finance-dashboard.layout-preview .coordination-popup__dialog :is(th,td) { padding: 12px; }
+}
