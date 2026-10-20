@@ -451,7 +451,7 @@ function App() {
     () =>
       [...filteredProjects]
         .sort((a, b) => b.realized - a.realized)
-        .map((project) => ({ label: project.id, value: project.realized })),
+        .map((project) => ({ label: project.id, projectTitle: project.title, value: project.realized })),
     [filteredProjects],
   );
 
@@ -459,7 +459,7 @@ function App() {
     () =>
       [...filteredProjects]
         .sort((a, b) => b.total - a.total)
-        .map((project) => ({ label: project.id, value: project.total })),
+        .map((project) => ({ label: project.id, projectTitle: project.title, value: project.total })),
     [filteredProjects],
   );
 
@@ -739,6 +739,8 @@ function App() {
           subtitle="Ranking de execução financeira"
           info="Lista os projetos com maior total realizado. Serve para identificar quais projetos mais executaram recursos dentro do filtro selecionado."
           items={topRealizedProjects}
+          tableDetails
+          detailValueLabel="Total realizado"
           limit={10}
           expandable
           wideLabels
@@ -749,6 +751,8 @@ function App() {
           subtitle="Ranking do valor total do instrumento"
           info="Lista os maiores projetos pelo valor total contratado. Ajuda a separar porte contratual de execução financeira."
           items={topTotalProjects}
+          tableDetails
+          detailValueLabel="Valor contratado"
           limit={10}
           expandable
           wideLabels
