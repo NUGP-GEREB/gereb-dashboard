@@ -186,6 +186,12 @@
 .finance-dashboard.layout-preview .coordination-chart .column-bar { border-radius: 5px 5px 2px 2px; transition: opacity .18s, filter .18s; }
 .finance-dashboard.layout-preview .coordination-chart .column-bar:hover, .finance-dashboard.layout-preview .coordination-chart .column-bar:focus-visible { filter: brightness(1.12); outline: 2px solid #a0bad5; outline-offset: 3px; }
 .finance-dashboard.layout-preview .coordination-chart .col-value { font-size: 8px; font-weight: 500; }
+.finance-dashboard.layout-preview .coordination-chart .column-group:hover,
+.finance-dashboard.layout-preview .coordination-chart .column-group:focus-within { z-index: 10; }
+.finance-dashboard.layout-preview .coordination-chart .column-bar:hover,
+.finance-dashboard.layout-preview .coordination-chart .column-bar:focus-visible { filter: none; z-index: 5; box-shadow: 0 0 0 2px #dce8f5; }
+.finance-dashboard.layout-preview .coordination-chart .col-value { z-index: 2; padding: 2px 3px; border-radius: 3px; background: #f7fafd; pointer-events: none; }
+.finance-dashboard.layout-preview .coordination-chart .column-bar::after { z-index: 30; }
 .finance-dashboard.layout-preview .coordination-chart .group-label { display: block; white-space: normal; overflow: visible; overflow-wrap: anywhere; font-size: 9px; color: #677f98; min-height: 25px; line-height: 1.5; }
 .coordination-chart__caption { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; color: #7e91a6; font-size: 10px; line-height: 1.6; min-height: 17px; }
 .finance-dashboard.layout-preview .coordination-chart .coordination-popup__dialog { border: 1px solid #dce6f0; border-radius: 12px; box-shadow: 0 18px 60px #18324929; }
