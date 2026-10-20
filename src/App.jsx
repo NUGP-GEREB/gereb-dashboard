@@ -8,6 +8,7 @@ import { ProjectManager } from "./components/ProjectManager";
 import { ProjectTable } from "./components/ProjectTable";
 import { ResourceDistribution } from "./components/ResourceDistribution";
 import { SummaryTableCard } from "./components/SummaryTableCard";
+import { LayoutNavigation } from "./components/LayoutNavigation";
 import fiocruzLogo from "./assets/marca-300x200_1.jpg";
 import { csvProjects, normalizeProjects } from "./data/projectCsv";
 import {
@@ -16,6 +17,7 @@ import {
   sumBy,
 } from "./utils/formatters";
 import "./styles/dashboard.css";
+import "./styles/layout-preview.css";
 
 const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];
@@ -218,7 +220,8 @@ const tedCategoryOptions = [
 function App() {
   const [projects, setProjects] = useState(loadProjects);
   const [managerOpen, setManagerOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [compactLayout, setCompactLayout] = useState(false);
   const [filters, setFilters] = useState({
     project: allOption,
     tedCategory: allOption,
@@ -581,31 +584,37 @@ function App() {
   }
 
   return (
-    <main className="finance-dashboard">
+    <main className={`finance-dashboard layout-preview${compactLayout ? " layout-preview--compact" : ""}`}>
       <section className="page-header" aria-label="Cabeçalho do Painel de Projetos GEREB">
         <div className="page-header__main">
           <div className="page-brand">
             <img src={fiocruzLogo} alt="Fiocruz Brasília" />
           </div>
           <div className="page-title-block">
-            <span>Fiocruz Brasília</span>
+            <span>Fiocruz Brasília / Gestão de projetos <em>Prévia de layout</em></span>
             <h1>Painel de Projetos GEREB</h1>
+            <p>Uma visão integrada da carteira, dos recursos e da execução financeira.</p>
           </div>
           <div className="page-status" aria-label="Atualização do painel">
             <span>Situação em 20/10/2026</span>
             <strong>{projectCountLabel}</strong>
+            <a href="https://nugp-gereb.github.io/gereb-dashboard/">Abrir versão atual ↗</a>
           </div>
         </div>
       </section>
 
+      <LayoutNavigation compact={compactLayout} onCompactChange={() => setCompactLayout((value) => !value)} />
+
+      <div id="visao-geral" className="section-anchor" />
       <section className="filter-shell" aria-label="Filtros da base GEREB">
         <div className="filter-summary">
           <div>
-            <strong>Filtros</strong>
+            <span className="section-eyebrow">Explore a carteira</span>
+            <strong>Refinar visão do painel</strong>
             <span>
               {activeFilterCount
                 ? `${activeFilterCount} filtro${activeFilterCount > 1 ? "s" : ""} ativo${activeFilterCount > 1 ? "s" : ""}`
-                : "Nenhum filtro ativo"}
+                : `${totals.projects} projetos · ${new Set(filteredProjects.map((project) => project.unit)).size} coordenações · ${brl.format(totals.total)} contratados`}
             </span>
           </div>
           <button
@@ -687,6 +696,14 @@ function App() {
         </div>
       </section>
 
+      {activeFilterCount > 0 && <div className="active-filter-list" aria-label="Filtros selecionados">
+        <span>Recorte atual</span>
+        {Object.entries(filters).filter(([, value]) => value && value !== allOption).map(([key, value]) => <button key={key} type="button" onClick={() => updateFilter(key, key === 'start' || key === 'end' ? '' : allOption)} aria-label={`Remover filtro ${value}`}>{value}<span aria-hidden="true">×</span></button>)}
+        <button type="button" className="clear-filters" onClick={resetFilters}>Limpar todos</button>
+      </div>}
+
+      <div className="section-heading"><div><span className="section-eyebrow">Visão geral</span><h2>Indicadores da carteira</h2></div><span className="live-caption" role="status">{totals.projects} projetos no recorte</span></div>
+
       <section className="dashboard-summary" aria-label="Resumo da carteira">
         {dashboardCards.map((card) => (
           <MetricCard
@@ -696,10 +713,17 @@ function App() {
             info={card.info}
             tone={card.tone}
             icon={card.icon}
+            detail={card.info}
             format="text"
           />
         ))}
       </section>
+      <section className="execution-pulse" aria-label="Leitura da execução financeira">
+        <div className="execution-pulse__main"><span className="section-eyebrow">Execução financeira</span><strong>{percent.format(totals.released ? totals.realized / totals.released : 0)}</strong><span>realizado sobre o recurso liberado</span></div>
+        <div className="execution-pulse__bar"><div className="execution-pulse__labels"><span>Realizado <strong>{brl.format(totals.realized)}</strong></span><span>Liberado <strong>{brl.format(totals.released)}</strong></span></div><div className="execution-progress" role="meter" aria-label="Percentual realizado sobre o liberado" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.max(0, totals.released ? totals.realized / totals.released * 100 : 0))}><span style={{ width: `${Math.min(100, Math.max(0, totals.released ? totals.realized / totals.released * 100 : 0))}%` }} /></div></div>
+        <div className="execution-pulse__alert"><strong>{totals.expiring}</strong><span>com término em até 180 dias</span></div>
+      </section>
+      <div id="analises" className="section-heading section-anchor"><div><span className="section-eyebrow">Análises</span><h2>Composição e execução dos recursos</h2></div><span>Distribuição da carteira selecionada</span></div>
       <section className="dashboard-grid">
         <ResourceDistribution items={resourceItems} />
         <DonutChart
@@ -721,6 +745,7 @@ function App() {
         groups={coordinationGroups}
       />
 
+      <div id="rankings" className="section-heading section-anchor"><div><span className="section-eyebrow">Destaques</span><h2>Projetos e concentração de recursos</h2></div><span>Explore os rankings e seus detalhamentos</span></div>
       <section className="charts-row">
         <BarList
           title="Projetos por Total Realizado"
@@ -769,9 +794,10 @@ function App() {
         />
       </section>
 
+      <div id="projetos" className="section-heading section-anchor"><div><span className="section-eyebrow">Registros</span><h2>Consulta à base de projetos</h2></div><span>Detalhamento e exportação da seleção</span></div>
       <ProjectTable key={filterKey} projects={filteredProjects} />
 
-      <section className="project-consultation" aria-label="Consulta de TEDs">
+      <section id="teds" className="project-consultation section-anchor" aria-label="Consulta de TEDs">
         <div className="project-consultation__heading">
           <div>
             <h2>Consulta de TEDs</h2>
