@@ -198,6 +198,11 @@
 .finance-dashboard.layout-preview > .dashboard-summary article.metric-card:nth-child(n) { height: auto; min-height: 142px; }
 .finance-dashboard.layout-preview > .dashboard-summary article.metric-card:nth-child(n) > strong { margin: 16px 0 9px; padding: 0; font-size: clamp(18px,1.6vw,26px); line-height: 1.25; font-weight: 600; }
 .finance-dashboard.layout-preview .dashboard-grid, .finance-dashboard.layout-preview .charts-row { padding: 0; border: 0; background: transparent; box-shadow: none; }
+.finance-dashboard.layout-preview > .dashboard-grid,
+.finance-dashboard.layout-preview > .charts-row,
+.finance-dashboard.layout-preview > .chart-panel--wide,
+.finance-dashboard.layout-preview > .table-panel,
+.finance-dashboard.layout-preview > .project-consultation { margin-left: 0; margin-right: 0; width: 100%; }
 .finance-dashboard.layout-preview.layout-preview--compact > .dashboard-summary article.metric-card:nth-child(n) { min-height: 105px; }
 @media (max-width: 760px) {
   .finance-dashboard.layout-preview > .dashboard-summary article.metric-card:nth-child(n) { min-height: 135px; }
