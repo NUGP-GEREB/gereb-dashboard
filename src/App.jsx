@@ -219,7 +219,7 @@ const tedCategoryOptions = [
 function App() {
   const [projects, setProjects] = useState(loadProjects);
   const [managerOpen, setManagerOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
     project: allOption,
     tedCategory: allOption,
