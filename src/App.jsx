@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { AxisOverview } from "./components/AxisOverview";
 import { BarList } from "./components/BarList";
 import { ColumnChart } from "./components/ColumnChart";
-import { DonutChart } from "./components/DonutChart";
+import { InteractivePie } from "./components/InteractivePie";
 import { MetricCard } from "./components/MetricCard";
 import { ProjectManager } from "./components/ProjectManager";
 import { ProjectTable } from "./components/ProjectTable";
@@ -718,14 +718,10 @@ function App() {
       <div id="analises" className="section-heading section-anchor"><div><span className="section-eyebrow">Análises</span><h2>Composição e execução dos recursos</h2></div><span>Distribuição da carteira selecionada</span></div>
       <section className="dashboard-grid">
         <ResourceDistribution items={resourceItems} />
-        <DonutChart
+        <InteractivePie
           title="Tipos de Instrumentos"
           info="Mostra a distribuição dos projetos por tipo de instrumento contratual."
           items={instrumentItems}
-          detailTitle="Detalhamento"
-          showDetailCount
-          showDetailFacts={false}
-          showDetailTotal
           valueType="count"
         />
       </section>
