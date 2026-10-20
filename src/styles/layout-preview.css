@@ -35,7 +35,7 @@
 .workspace-nav a[aria-current] { color: white; background: var(--blue); box-shadow: 0 2px 5px #21549a1a; }
 .density-toggle { display: inline-flex; align-items: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px; color: #597089; background: white; white-space: nowrap; font-size: 11px; cursor: pointer; }
 .finance-dashboard.layout-preview .section-anchor { scroll-margin-top: 86px; }
-.finance-dashboard.layout-preview .filter-shell { margin: 0 0 20px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: none; }
+.finance-dashboard.layout-preview .filter-shell { margin: 20px 0; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: none; }
 .finance-dashboard.layout-preview .filter-summary { padding: 18px 22px 12px; background: white; }
 .finance-dashboard.layout-preview .filter-summary strong { margin: 5px 0; text-transform: none; font-size: 17px; font-weight: 600; color: #183249; }
 .finance-dashboard.layout-preview .filter-summary span { font-size: 11px; color: #718398; }

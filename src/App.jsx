@@ -8,7 +8,6 @@ import { ProjectManager } from "./components/ProjectManager";
 import { ProjectTable } from "./components/ProjectTable";
 import { ResourceDistribution } from "./components/ResourceDistribution";
 import { SummaryTableCard } from "./components/SummaryTableCard";
-import { LayoutNavigation } from "./components/LayoutNavigation";
 import fiocruzLogo from "./assets/marca-300x200_1.jpg";
 import { csvProjects, normalizeProjects } from "./data/projectCsv";
 import {
@@ -221,7 +220,6 @@ function App() {
   const [projects, setProjects] = useState(loadProjects);
   const [managerOpen, setManagerOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(true);
-  const [compactLayout, setCompactLayout] = useState(false);
   const [filters, setFilters] = useState({
     project: allOption,
     tedCategory: allOption,
@@ -584,7 +582,7 @@ function App() {
   }
 
   return (
-    <main className={`finance-dashboard layout-preview${compactLayout ? " layout-preview--compact" : ""}`}>
+    <main className="finance-dashboard layout-preview">
       <section className="page-header" aria-label="Cabeçalho do Painel de Projetos GEREB">
         <div className="page-header__main">
           <div className="page-brand">
@@ -603,7 +601,6 @@ function App() {
         </div>
       </section>
 
-      <LayoutNavigation compact={compactLayout} onCompactChange={() => setCompactLayout((value) => !value)} />
 
       <div id="visao-geral" className="section-anchor" />
       <section className="filter-shell" aria-label="Filtros da base GEREB">
@@ -717,11 +714,6 @@ function App() {
             format="text"
           />
         ))}
-      </section>
-      <section className="execution-pulse" aria-label="Leitura da execução financeira">
-        <div className="execution-pulse__main"><span className="section-eyebrow">Execução financeira</span><strong>{percent.format(totals.released ? totals.realized / totals.released : 0)}</strong><span>realizado sobre o recurso liberado</span></div>
-        <div className="execution-pulse__bar"><div className="execution-pulse__labels"><span>Realizado <strong>{brl.format(totals.realized)}</strong></span><span>Liberado <strong>{brl.format(totals.released)}</strong></span></div><div className="execution-progress" role="meter" aria-label="Percentual realizado sobre o liberado" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.max(0, totals.released ? totals.realized / totals.released * 100 : 0))}><span style={{ width: `${Math.min(100, Math.max(0, totals.released ? totals.realized / totals.released * 100 : 0))}%` }} /></div></div>
-        <div className="execution-pulse__alert"><strong>{totals.expiring}</strong><span>com término em até 180 dias</span></div>
       </section>
       <div id="analises" className="section-heading section-anchor"><div><span className="section-eyebrow">Análises</span><h2>Composição e execução dos recursos</h2></div><span>Distribuição da carteira selecionada</span></div>
       <section className="dashboard-grid">
