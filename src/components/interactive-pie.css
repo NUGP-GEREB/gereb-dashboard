@@ -1,0 +1,35 @@
+.finance-dashboard.layout-preview .interactive-pie { display: flex; flex-direction: column; min-height: 0; height: auto; padding: 22px; }
+.interactive-pie__layout { display: grid; flex: 1; grid-template-columns: minmax(180px,.85fr) minmax(0,1.35fr); gap: 20px; align-items: center; }
+.interactive-pie__visual { min-width: 0; text-align: center; }
+.interactive-pie__stage { position: relative; max-width: 280px; margin: auto; }
+.interactive-pie__stage svg { display: block; width: 100%; overflow: visible; }
+.interactive-pie__stage path { cursor: pointer; transform-origin: 110px 110px; transition: opacity .2s, stroke-width .2s, filter .2s; outline: none; }
+.interactive-pie__stage path.is-muted { opacity: .27; }
+.interactive-pie__stage path.is-active { stroke-width: 37px; filter: drop-shadow(0 3px 3px #19385220); }
+.interactive-pie__stage path:focus-visible { stroke-width: 39px; filter: drop-shadow(0 0 2px #183249); }
+.interactive-pie__center { position: absolute; inset: 30%; display: flex; flex-direction: column; justify-content: center; gap: 7px; pointer-events: none; }
+.interactive-pie__center > span { color: #7a8da2; font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }
+.interactive-pie__center > strong { color: #1c3c61; font-size: clamp(20px,2vw,30px); font-weight: 650; letter-spacing: -.04em; white-space: nowrap; }
+.interactive-pie__center > small { color: #73879d; font-size: 10px; }
+.interactive-pie__selection { min-height: 54px; display: grid; align-content: start; gap: 7px; padding: 3px 4px 0; }
+.interactive-pie__selection strong { color: #355773; font-size: 11px; font-weight: 600; }
+.interactive-pie__selection span { color: #8091a3; font-size: 11px; }
+.interactive-pie__legend { display: grid; gap: 5px; min-width: 0; }
+.finance-dashboard.layout-preview .interactive-pie__row { position: relative; display: grid; grid-template-columns: 9px minmax(0,1fr) auto; align-items: center; gap: 9px; width: 100%; padding: 12px 10px 15px; border: 1px solid transparent; border-radius: 7px; text-align: left; background: #f7f9fc; color: #304f6d; cursor: pointer; transition: background .2s,border-color .2s; font: inherit; }
+.finance-dashboard.layout-preview .interactive-pie__row:hover, .finance-dashboard.layout-preview .interactive-pie__row.is-active { border-color: #ccdaea; background: #edf4fc; }
+.interactive-pie__row > i { width: 8px; height: 8px; border-radius: 3px; }
+.interactive-pie__label { font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+.interactive-pie__label small { display: block; margin-top: 4px; color: #8293a6; font-size: 9px; }
+.interactive-pie__value { display: grid; gap: 5px; justify-items: end; }
+.interactive-pie__value strong { color: #24476a; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.interactive-pie__value b { color: #637f99; font-size: 10px; font-weight: 500; }
+.interactive-pie__mini-track { position: absolute; left: 27px; right: 10px; bottom: 6px; height: 2px; background: #e7edf5; border-radius: 2px; overflow: hidden; }
+.interactive-pie__mini-track > span { display: block; height: 100%; transition: width .3s; }
+.interactive-pie__footer { min-height: 41px; display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #edf1f6; }
+.interactive-pie__footer > span { color: #8b9aab; font-size: 9px; line-height: 1.5; }
+.interactive-pie__footer button { background: transparent; border: 0; color: #24579a; font: inherit; font-size: 10px; padding: 5px; cursor: pointer; white-space: nowrap; }
+.interactive-pie__footer button:disabled { color: #a6b2bf; cursor: default; }
+.interactive-pie__empty { min-height: 220px; display: grid; place-items: center; text-align: center; color: #7a8da2; font-size: 12px; }
+@media (max-width: 1250px) and (min-width: 761px) { .interactive-pie__layout { grid-template-columns: minmax(0,1fr); } .interactive-pie__stage { max-width: 225px; } .interactive-pie__legend { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .interactive-pie__layout { grid-template-columns: minmax(0,1fr); gap: 12px; } .interactive-pie__stage { max-width: 260px; } .interactive-pie__center > strong { font-size: 28px; } .interactive-pie__row { padding: 13px 12px 16px; } .interactive-pie__label { font-size: 11px; } .interactive-pie__value strong { font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { .interactive-pie__stage path, .interactive-pie__row, .interactive-pie__mini-track > span { transition: none; } }

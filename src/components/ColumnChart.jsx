@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { CardHelpButton } from './CardHelpButton'
 
-const palette = ['#2EA6A1', '#77C6CC', '#124986']
+const palette = ['#209d9c', '#77bcc8', '#24579a']
+const fullMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+const compactMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', notation: 'compact', maximumFractionDigits: 1 })
 
 const formatMillions = (value) => {
+  if (Math.abs(value) < 1_000_000) return compactMoney.format(value)
   const sign = value < 0 ? '-' : ''
   const millions = Math.abs(value) / 1_000_000
   const formatted = millions.toLocaleString('pt-BR', {
@@ -16,6 +19,7 @@ const formatMillions = (value) => {
 
 export function ColumnChart({ title, subtitle, groups, info }) {
   const [summaryOpen, setSummaryOpen] = useState(false)
+  const [highlight, setHighlight] = useState(null)
   const rubrics = ['Realizado', 'Comprometido', 'Saldo']
   const max = Math.max(...groups.flatMap((group) => group.values.map((value) => Math.abs(value))), 1)
   const isCoordinationChart = title.startsWith('Realizado, Comprometido')
@@ -44,7 +48,7 @@ export function ColumnChart({ title, subtitle, groups, info }) {
               className={value < 0 ? 'is-negative' : ''}
               key={`${group.label}-${rubrics[index]}-table`}
             >
-              {formatMillions(value)}
+              {fullMoney.format(value)}
             </span>
           ))}
         </div>
@@ -53,7 +57,7 @@ export function ColumnChart({ title, subtitle, groups, info }) {
   )
 
   return (
-    <section className="panel chart-panel chart-panel--wide">
+    <section className="panel chart-panel chart-panel--wide coordination-chart" onKeyDown={(event) => { if (event.key === 'Escape') setSummaryOpen(false) }}>
       <CardHelpButton
         title={displayTitle}
         description={displayInfo || 'Grafico comparativo para enxergar realizado, comprometido e saldo lado a lado por grupo.'}
@@ -82,10 +86,10 @@ export function ColumnChart({ title, subtitle, groups, info }) {
           onClick={() => setSummaryOpen(true)}
           aria-haspopup="dialog"
         >
-          Ver mais
+          Ver valores completos
         </button>
       </div>
-      <div className="column-chart" style={{ '--column-group-count': groups.length }}>
+      <div className="column-chart" tabIndex={0} role="group" aria-label="Gráfico de colunas por coordenação; deslize horizontalmente em telas menores" style={{ '--column-group-count': Math.max(groups.length, 1) }}>
         {groups.map((group) => (
           <div className="column-group" key={group.label}>
             <div className="columns">
@@ -93,8 +97,15 @@ export function ColumnChart({ title, subtitle, groups, info }) {
                 <div
                   key={`${group.label}-${rubrics[index]}`}
                   className={`column-bar column-bar--${index} has-tooltip${value < 0 ? ' column-bar--negative' : ''}${Math.abs(value) < 8_000_000 ? ' column-bar--small' : ''}`}
-                  data-tooltip={`${group.label} - ${rubrics[index]}: ${formatMillions(value)}`}
-                  title={`${rubrics[index]}: ${formatMillions(value)}`}
+                  data-tooltip={`${group.label} - ${rubrics[index]}: ${fullMoney.format(value)}`}
+                  title={`${group.label} — ${rubrics[index]}: ${fullMoney.format(value)}`}
+                  tabIndex={0}
+                  role="img"
+                  aria-label={`${group.label}, ${rubrics[index]}: ${fullMoney.format(value)}`}
+                  onMouseEnter={() => setHighlight(`${group.label} · ${rubrics[index]}: ${fullMoney.format(value)}`)}
+                  onMouseLeave={() => setHighlight(null)}
+                  onFocus={() => setHighlight(`${group.label} · ${rubrics[index]}: ${fullMoney.format(value)}`)}
+                  onBlur={() => setHighlight(null)}
                   style={{
                     height: `${Math.max((Math.abs(value) / max) * 100, value !== 0 ? 4 : 0)}%`,
                     background: palette[index],
@@ -108,6 +119,8 @@ export function ColumnChart({ title, subtitle, groups, info }) {
           </div>
         ))}
       </div>
+      <div className="coordination-chart__caption"><span aria-live="polite">{highlight || `${groups.length} coordenações · Passe o mouse ou use Tab para consultar o valor completo.`}</span><span>Valores em reais · Em telas menores, deslize o gráfico.</span></div>
+      {groups.length === 0 && <p role="status">Nenhuma coordenação encontrada para os filtros selecionados.</p>}
       {summaryOpen ? (
         <div
           className="coordination-popup"
@@ -132,6 +145,7 @@ export function ColumnChart({ title, subtitle, groups, info }) {
                 type="button"
                 onClick={() => setSummaryOpen(false)}
                 aria-label="Fechar tabela"
+                autoFocus
               >
                 Fechar
               </button>
