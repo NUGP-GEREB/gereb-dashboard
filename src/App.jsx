@@ -20,7 +20,7 @@ import "./styles/dashboard.css";
 const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];
 const ministryOfHealth = "MINISTÉRIO DA SAÚDE";
-const storageKey = "gereb-projects-editable-v4";
+const storageKey = "gereb-projects-editable-2026-10-20";
 const oldStorageKeys = [
   "gereb-projects-editable-v1",
   "gereb-projects-editable-v2",
@@ -592,7 +592,7 @@ function App() {
             <h1>Painel de Projetos GEREB</h1>
           </div>
           <div className="page-status" aria-label="Atualização do painel">
-            <span>Situação em junho/2026</span>
+            <span>Situação em 20/10/2026</span>
             <strong>{projectCountLabel}</strong>
           </div>
         </div>
