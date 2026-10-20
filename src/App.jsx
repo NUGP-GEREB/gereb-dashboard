@@ -8,7 +8,6 @@ import { ProjectManager } from "./components/ProjectManager";
 import { ProjectTable } from "./components/ProjectTable";
 import { ResourceDistribution } from "./components/ResourceDistribution";
 import { SummaryTableCard } from "./components/SummaryTableCard";
-import { HistoricalComparison } from "./components/HistoricalComparison";
 import fiocruzLogo from "./assets/marca-300x200_1.jpg";
 import { csvProjects, normalizeProjects } from "./data/projectCsv";
 import {
@@ -598,8 +597,6 @@ function App() {
           </div>
         </div>
       </section>
-
-      <HistoricalComparison projects={projects} />
 
       <section className="filter-shell" aria-label="Filtros da base GEREB">
         <div className="filter-summary">
