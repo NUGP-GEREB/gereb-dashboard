@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises'
+import { compareProjects, financialTotal, groupComparison } from '../src/data/comparison.js'
 
 const csvSource = await readFile(new URL('../projetos_fiotec_dashboard.csv', import.meta.url), 'utf8')
 const parserSource = await readFile(new URL('../src/data/projectCsv.js', import.meta.url), 'utf8')
@@ -20,6 +21,21 @@ const normalizedInstrumentTypes = new Set(
 )
 
 assert(projects.length === 189, 'A base de 20/10/2026 deve conter exatamente 189 projetos.')
+const previousProjects = JSON.parse(await readFile(new URL('../src/data/previousProjects.json', import.meta.url), 'utf8'))
+const comparison = compareProjects(previousProjects, projects)
+assert(previousProjects.length === 169, 'A fotografia anterior deve preservar 169 projetos.')
+assert(comparison.filter(entry => entry.status === 'Incluído').length === 20, 'A comparação deve identificar 20 inclusões.')
+assert(comparison.filter(entry => entry.status === 'Retirado').length === 0, 'A comparação não deve inventar retiradas.')
+assert(financialTotal(previousProjects, 'total') === 1498212300.33, 'O valor anterior deve reconciliar com a versão publicada.')
+const fixture = [{ id: 'A', total: 100, unit: 'X', title: 'Antes' }, { id: 'B', total: 50, unit: 'X' }]
+const nextFixture = [{ id: 'A', total: 125, unit: 'Y', title: 'Depois' }, { id: 'C', total: 20, unit: 'Y' }]
+const fixtureChanges = compareProjects(fixture, nextFixture)
+assert(fixtureChanges.find(entry => entry.id === 'A').fields.length === 3, 'Deve detectar alterações financeiras, textuais e de grupo.')
+assert(fixtureChanges.find(entry => entry.id === 'B').status === 'Retirado', 'Deve detectar projetos retirados.')
+assert(compareProjects(fixture, fixture).every(entry => entry.status === 'Sem alteração'), 'Bases iguais devem permanecer sem alteração.')
+const fixtureGroups = groupComparison(fixture, nextFixture, 'unit', 'total')
+assert(fixtureGroups.find(group => group.label === 'X').before === 150 && fixtureGroups.find(group => group.label === 'X').after === 0, 'Deve preservar grupos que desapareceram.')
+assert(fixtureGroups.find(group => group.label === 'Y').after === 145, 'Deve somar os novos grupos.')
 assert(new Set(projects.map(project => project.id)).size === projects.length, 'Os identificadores devem ser unicos.')
 for (const [field, expected] of Object.entries({ total: 1591536814.88, released: 905724922.64, receivable: 731867889.28, realized: 718715374.03, committed: 57545554.80, currentBalance: 129463993.81 })) {
   const actual = projects.reduce((sum, project) => sum + Math.round(project[field] * 100), 0)
