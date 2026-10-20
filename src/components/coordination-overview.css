@@ -1,0 +1,47 @@
+.finance-dashboard.layout-preview .coord-overview { margin-bottom: 24px; padding: 24px; min-width: 0; }
+.coord-overview__heading { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+.coord-overview__heading .panel-title { margin-bottom: 0; }
+.coord-overview__badge { flex-shrink: 0; color: #54728f; background: #f0f5fb; border: 1px solid #dde7f1; padding: 7px 10px; border-radius: 6px; font-size: 11px; }
+.coord-overview__toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 0; }
+.coord-overview__toolbar p { margin: 0; color: #7b8da0; font-size: 10px; line-height: 1.6; }
+.coord-overview__toolbar > div { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.coord-overview__toolbar label { display: flex; align-items: center; gap: 8px; color: #6f8399; font-size: 11px; }
+.coord-overview__toolbar select, .coord-overview__toolbar button { height: 34px; border: 1px solid #d7e3ef; border-radius: 6px; background: white; color: #365b7d; padding: 0 10px; font-size: 11px; }
+.coord-overview__toolbar button { cursor: pointer; background: #f4f8fc; }
+.coord-overview__table { border: 1px solid #dfe7f0; border-radius: 8px; overflow: hidden; }
+.coord-overview__row { display: grid; grid-template-columns: minmax(170px,.8fr) repeat(3,minmax(0,1fr)); gap: 20px; align-items: center; padding: 13px 18px; }
+.coord-overview__header { background: #f0f5fa; color: #698099; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding-top: 14px; padding-bottom: 14px; }
+.coord-overview__header > span:not(:first-child) { display: flex; align-items: center; justify-content: end; gap: 7px; }
+.coord-overview__header i { display: inline-block; width: 7px; height: 7px; border-radius: 2px; }
+.coord-overview__data { border-top: 1px solid #edf1f6; transition: background .15s; }
+.coord-overview__data:nth-child(odd) { background: #fafbfd; }
+.coord-overview__data:hover { background: #eff5fb; }
+.coord-overview__name { font-size: 11px; font-weight: 600; color: #365775; overflow-wrap: anywhere; }
+.coord-overview__amount { min-width: 0; text-align: right; }
+.coord-overview__amount > strong { font-size: 12px; font-weight: 600; color: #2e506f; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.coord-overview__amount.is-negative > strong { color: #ae3c4b; }
+.coord-overview__track { margin-top: 8px; height: 5px; background: #e8eef5; border-radius: 3px; position: relative; }
+.coord-overview__track > i { position: absolute; top: 0; bottom: 0; display: block; border-radius: 2px; transition: width .3s; }
+.coord-overview__zero { position: absolute; left: 50%; height: 9px; top: -2px; width: 1px; background: #bacbdb; }
+.coord-overview__mobile-label { display: none; }
+.coord-overview__total { border-top: 2px solid #d5e2ef; background: #eef5fc; color: #25496d; padding-top: 18px; padding-bottom: 18px; }
+.coord-overview__total > div { text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.coord-overview__footnote { margin: 13px 0 0; color: #8293a6; font-size: 10px; line-height: 1.6; }
+.coord-overview__empty { text-align: center; padding: 30px; color: #6f8399; }
+@media (max-width: 1000px) { .coord-overview__toolbar { align-items: start; flex-direction: column; } .coord-overview__row { grid-template-columns: minmax(135px,.7fr) repeat(3,minmax(0,1fr)); gap: 14px; padding-right: 12px; padding-left: 12px; } .coord-overview__amount > strong, .coord-overview__total > div { font-size: 11px; } }
+@media (max-width: 700px) {
+  .finance-dashboard.layout-preview .coord-overview { padding: 18px 14px; }
+  .coord-overview__heading { flex-direction: column; gap: 10px; }
+  .coord-overview__toolbar > div { flex-wrap: wrap; width: 100%; }
+  .coord-overview__toolbar label { justify-content: space-between; flex: 1; }
+  .coord-overview__header { display: none; }
+  .coord-overview__table { border: 0; border-radius: 0; overflow: visible; }
+  .coord-overview__row { grid-template-columns: minmax(0,1fr); gap: 13px; border: 1px solid #dfe7f0; border-radius: 8px; padding: 16px; margin-top: 10px; }
+  .coord-overview__name { border-bottom: 1px solid #e5ecf4; padding-bottom: 10px; font-size: 12px; }
+  .coord-overview__amount { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 3px 10px; }
+  .coord-overview__mobile-label { display: block; text-align: left; font-size: 10px; color: #7b8ea4; font-weight: 400; }
+  .coord-overview__amount > strong { font-size: 12px; }
+  .coord-overview__track { grid-column: 1 / -1; margin-top: 4px; }
+  .coord-overview__total > div { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .coord-overview__data, .coord-overview__track > i { transition: none; } }

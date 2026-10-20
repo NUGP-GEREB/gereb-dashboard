@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { AxisOverview } from "./components/AxisOverview";
 import { BarList } from "./components/BarList";
-import { ColumnChart } from "./components/ColumnChart";
+import { CoordinationOverview } from "./components/CoordinationOverview";
 import { InteractivePie } from "./components/InteractivePie";
 import { MetricCard } from "./components/MetricCard";
 import { ProjectManager } from "./components/ProjectManager";
@@ -726,7 +726,7 @@ function App() {
         />
       </section>
 
-      <ColumnChart
+      <CoordinationOverview
         title="Realizado, Comprometido e Saldo por Coordenação"
         subtitle="Concentração financeira das coordenações com maior execução"
         info="Compara as coordenações com maior execução para mostrar onde estão concentrados os valores realizados, os compromissos assumidos e os saldos disponíveis."
