@@ -18,6 +18,7 @@ import {
 import "./styles/dashboard.css";
 import "./styles/layout-preview.css";
 import "./styles/popup-tables.css";
+import "./styles/header.css";
 
 const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];
@@ -590,12 +591,12 @@ function App() {
             <img src={fiocruzLogo} alt="Fiocruz Brasília" />
           </div>
           <div className="page-title-block">
-            <span>Fiocruz Brasília / Gestão de projetos</span>
-            <h1>Painel de Projetos GEREB</h1>
+            <span>Gestão e acompanhamento de projetos</span>
+            <h1>Painel de Projetos <span className="header-gereb">GEREB</span></h1>
             <p>Uma visão integrada da carteira, dos recursos e da execução financeira.</p>
           </div>
           <div className="page-status" aria-label="Atualização do painel">
-            <span>Situação em 20/10/2026</span>
+            <span><i aria-hidden="true" /> Situação em 20/10/2026</span>
             <strong>{projectCountLabel}</strong>
           </div>
         </div>
