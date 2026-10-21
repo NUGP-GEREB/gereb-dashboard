@@ -22,11 +22,6 @@ export function ColumnChart({ title, subtitle, groups, info }) {
   const [highlight, setHighlight] = useState(null)
   const rubrics = ['Realizado', 'Comprometido', 'Saldo']
   const max = Math.max(...groups.flatMap((group) => group.values.map((value) => Math.abs(value))), 1)
-  const labelPositions = (values) => values.reduce((positions, value) => {
-    let height = Math.max(Math.abs(value) / max * 220, value !== 0 ? 11 : 0) + 12
-    while (positions.some((previous) => Math.abs(previous - height) < 20)) height += 20
-    return [...positions, height]
-  }, [])
   const isCoordinationChart = title.startsWith('Realizado, Comprometido')
   const displayTitle = isCoordinationChart
     ? 'Realizado, Comprometido e Saldo por Coordena\u00e7\u00e3o'
@@ -119,10 +114,10 @@ export function ColumnChart({ title, subtitle, groups, info }) {
                 </div>
               ))}
             </div>
-            <div className="column-label-layer" aria-label={`Valores de ${group.label}`}>
-              {group.values.map((value, index) => <span className={`column-top-value${value < 0 ? ' is-negative' : ''}`} key={rubrics[index]} style={{ bottom: `${labelPositions(group.values)[index]}px`, left: `${(index + .5) / 3 * 100}%`, color: value < 0 ? '#b14f60' : palette[index] }} title={`${rubrics[index]}: ${fullMoney.format(value)}`} aria-label={`${rubrics[index]}: ${fullMoney.format(value)}`}>{formatMillions(value)}</span>)}
-            </div>
             <small className="group-label" title={group.label}>{group.label}</small>
+            <div className="column-values" aria-label={`Valores de ${group.label}`}>
+              {group.values.map((value, index) => <span className={`column-value${value < 0 ? ' is-negative' : ''}`} key={rubrics[index]} title={`${rubrics[index]}: ${fullMoney.format(value)}`} aria-label={`${rubrics[index]}: ${fullMoney.format(value)}`}><i style={{ background: palette[index] }} aria-hidden="true" /><span>{formatMillions(value)}</span></span>)}
+            </div>
           </div>
         ))}
       </div>
