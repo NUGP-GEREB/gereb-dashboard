@@ -111,11 +111,13 @@ export function ColumnChart({ title, subtitle, groups, info }) {
                     background: palette[index],
                   }}
                 >
-                  <b className={`col-value col-value--${index}`}>{formatMillions(value)}</b>
                 </div>
               ))}
             </div>
             <small className="group-label" title={group.label}>{group.label}</small>
+            <div className="column-values" aria-label={`Valores de ${group.label}`}>
+              {group.values.map((value, index) => <span className={`column-value${value < 0 ? ' is-negative' : ''}`} key={rubrics[index]} title={`${rubrics[index]}: ${fullMoney.format(value)}`} aria-label={`${rubrics[index]}: ${fullMoney.format(value)}`}><i style={{ background: palette[index] }} aria-hidden="true" /><span>{formatMillions(value)}</span></span>)}
+            </div>
           </div>
         ))}
       </div>
