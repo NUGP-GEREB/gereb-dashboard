@@ -8,7 +8,7 @@ import { ProjectManager } from "./components/ProjectManager";
 import { ProjectTable } from "./components/ProjectTable";
 import { ResourceDistribution } from "./components/ResourceDistribution";
 import { SummaryTableCard } from "./components/SummaryTableCard";
-import fiocruzLogo from "./assets/marca-300x200_1.jpg";
+import fiocruzLogo from "./assets/fiocruz-brasilia-logo.png";
 import { csvProjects, normalizeProjects } from "./data/projectCsv";
 import {
   brl,
