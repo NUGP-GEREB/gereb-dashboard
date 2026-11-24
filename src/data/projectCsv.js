@@ -1,5 +1,35 @@
 import csvSource from "../../projetos_fiotec_dashboard.csv?raw";
 
+const instrumentLabels = [
+  "ACORDO DE EXECUÇÃO DE PROJETOS",
+  "CARTA ACORDO",
+  "CONVÊNIO PD&I",
+  "DISPENSA DE TED",
+  "EMENDA PARLAMENTAR",
+  "LOA",
+  "SCD",
+  "TED",
+];
+
+const instrumentKey = (value) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const instrumentAliases = new Map(
+  instrumentLabels.map((label) => [instrumentKey(label), label]),
+);
+instrumentAliases.set("AEP", "ACORDO DE EXECUÇÃO DE PROJETOS");
+instrumentAliases.set("EMENDAS", "EMENDA PARLAMENTAR");
+
+export function normalizeInstrumentType(value) {
+  const cleaned = String(value ?? "")
+    .normalize("NFC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLocaleUpperCase("pt-BR");
+
+  // The instrument column is authoritative; an AEP in the project ID is not a type.
+  return instrumentAliases.get(instrumentKey(cleaned)) || cleaned || "Não informado";
+}
+
 function parseCsv(text) {
   const rows = [];
   let row = [];
@@ -92,6 +122,7 @@ export function normalizeProjects(items) {
   return items.map((project, index) => ({
     ...project,
     item: index + 1,
+    instrumentType: normalizeInstrumentType(project.instrumentType),
     total: toNumber(project.total),
     budgetBalance:
       project.budgetBalance === undefined

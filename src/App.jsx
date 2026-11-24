@@ -9,7 +9,7 @@ import { ProjectTable } from "./components/ProjectTable";
 import { ResourceDistribution } from "./components/ResourceDistribution";
 import { SummaryTableCard } from "./components/SummaryTableCard";
 import fiocruzLogo from "./assets/fiocruz-brasilia-logo.png";
-import { csvProjects, normalizeProjects } from "./data/projectCsv";
+import { csvProjects, normalizeInstrumentType, normalizeProjects } from "./data/projectCsv";
 import {
   brl,
   percent,
@@ -94,11 +94,6 @@ const instrumentColors = {
   "CARTA ACORDO": "#1B2D4A",
   "DISPENSA DE TED": "#0F4C8A",
 };
-
-function normalizeInstrumentType(value) {
-  if (value === "EMENDAS") return "EMENDA PARLAMENTAR";
-  return value || "Não informado";
-}
 
 const isTedProject = (project) =>
   normalizeInstrumentType(project.instrumentType) === "TED";
@@ -221,7 +216,6 @@ const tedCategoryOptions = [
 function App() {
   const [projects, setProjects] = useState(loadProjects);
   const [managerOpen, setManagerOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
     project: allOption,
     tedCategory: allOption,
@@ -604,27 +598,11 @@ function App() {
 
 
       <div id="visao-geral" className="section-anchor" />
-      <section className="filter-shell" aria-label="Filtros da base GEREB">
+      <section className="filter-shell" aria-labelledby="portfolio-filters-title">
         <div className="filter-summary">
-          <div>
-            <span className="section-eyebrow">Explore a carteira</span>
-            <strong>Refinar visão do painel</strong>
-            <span>
-              {activeFilterCount
-                ? `${activeFilterCount} filtro${activeFilterCount > 1 ? "s" : ""} ativo${activeFilterCount > 1 ? "s" : ""}`
-                : `${totals.projects} projetos · ${new Set(filteredProjects.map((project) => project.unit)).size} coordenações · ${brl.format(totals.total)} contratados`}
-            </span>
-          </div>
-          <button
-            type="button"
-            className="filter-toggle"
-            aria-expanded={filtersOpen}
-            onClick={() => setFiltersOpen((current) => !current)}
-          >
-            {filtersOpen ? "Ocultar" : "Mostrar"}
-          </button>
+          <h2 id="portfolio-filters-title">Carteira de Projetos da GEREB</h2>
         </div>
-        <div className={filtersOpen ? "filter-panel is-open" : "filter-panel"}>
+        <form className="filter-panel" onSubmit={(event) => event.preventDefault()}>
         <FilterSelect
           label="Projeto"
           value={filters.project}
@@ -684,14 +662,14 @@ function App() {
           />
         </label>
         <div className="filter-actions">
-          <button type="button" onClick={() => setFiltersOpen(false)}>
+          <button type="submit">
             Aplicar
           </button>
           <button type="button" onClick={resetFilters}>
             Limpar
           </button>
         </div>
-        </div>
+        </form>
       </section>
 
       {activeFilterCount > 0 && <div className="active-filter-list" aria-label="Filtros selecionados">
