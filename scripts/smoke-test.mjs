@@ -1,5 +1,9 @@
 import { readFile } from 'node:fs/promises'
-import { projects } from '../src/data/projects.js'
+
+const csvSource = await readFile(new URL('../projetos_fiotec_dashboard.csv', import.meta.url), 'utf8')
+const parserSource = await readFile(new URL('../src/data/projectCsv.js', import.meta.url), 'utf8')
+const moduleSource = parserSource.replace(/^import csvSource[^\n]*\n/, `const csvSource = ${JSON.stringify(csvSource)};\n`)
+const { csvProjects: projects, normalizeInstrumentType, normalizeProjects } = await import(`data:text/javascript;base64,${Buffer.from(moduleSource).toString('base64')}`)
 
 function assert(condition, message) {
   if (!condition) {
@@ -15,7 +19,14 @@ const normalizedInstrumentTypes = new Set(
   ),
 )
 
-assert(projects.length === 127, 'A base deve conter exatamente 127 projetos.')
+assert(projects.length === 189, 'A base de 20/10/2026 deve conter exatamente 189 projetos.')
+assert(new Set(projects.map(project => project.id)).size === projects.length, 'Os identificadores devem ser unicos.')
+for (const [field, expected] of Object.entries({ total: 1591536814.88, released: 905724922.64, receivable: 731867889.28, realized: 718715374.03, committed: 57545554.80, currentBalance: 129463993.81 })) {
+  const actual = projects.reduce((sum, project) => sum + Math.round(project[field] * 100), 0)
+  assert(actual === Math.round(expected * 100), `O total de ${field} deve corresponder a planilha.`)
+}
+assert(projects.every(project => /^\d{4}-\d{2}-\d{2}$/.test(project.start) && /^\d{4}-\d{2}-\d{2}$/.test(project.end)), 'As vigencias devem estar no formato ISO.')
+assert(appSource.includes('Situação em 20/10/2026'), 'A referencia deve indicar a data da base.')
 assert(normalizedInstrumentTypes.has('EMENDA PARLAMENTAR'), 'EMENDAS deve entrar em EMENDA PARLAMENTAR.')
 assert(appSource.includes('normalizeInstrumentType(project.instrumentType) === filters.modality'), 'Filtro de instrumento deve usar o valor normalizado.')
 assert(!appSource.includes('realizedProjectRanking'), 'Ranking de realizado nao deve ser fixo.')
@@ -27,5 +38,21 @@ assert(appSource.includes('filters.tedCategory'), 'A consulta por TED deve filtr
 assert(appSource.includes('filters.tedYear'), 'A consulta por TED deve filtrar por ano do TED.')
 assert(appSource.includes('filters.tedFunder'), 'A consulta por TED deve filtrar por orgao concedente.')
 assert(cssSource.includes('project-card-list'), 'A visualizacao mobile em cards deve estar estilizada.')
+
+const agreementLabel = 'ACORDO DE EXECUÇÃO DE PROJETOS'
+for (const value of ['AEP', ' aep ', 'acordo de execucao de projetos', ' ACORDO\u00a0DE  EXECUÇÃO DE PROJETOS\u200b', agreementLabel.normalize('NFD')]) {
+  assert(normalizeInstrumentType(value) === agreementLabel, `Tipo de instrumento não normalizado: ${value}`)
+}
+assert(normalizeInstrumentType(' emendas ') === 'EMENDA PARLAMENTAR', 'O alias EMENDAS deve ser preservado.')
+assert(normalizeInstrumentType('  nova categoria  ') === 'NOVA CATEGORIA', 'Categorias futuras não devem ser excluídas.')
+assert(normalizeInstrumentType(null) === 'Não informado', 'Tipos ausentes devem ter um rótulo seguro.')
+const normalizedAgain = normalizeProjects(projects)
+assert(JSON.stringify(normalizedAgain) === JSON.stringify(projects), 'A normalização repetida deve preservar os registros e valores.')
+assert(appSource.includes('Carteira de Projetos da GEREB'), 'O título institucional deve estar presente.')
+assert(!/filtersOpen|filter-toggle|Explorar projetos|Refinar a visão do painel/.test(appSource), 'O painel não deve conter controles ou textos antigos.')
+assert(!/filter-toggle|filter-panel\.is-open/.test(cssSource), 'Os estilos de recolhimento devem ser removidos.')
+const agreementProjects = projects.filter(project => project.instrumentType === agreementLabel)
+const aepIds = projects.filter(project => /-AEP-/.test(project.id))
+console.log(`Auditoria: ${agreementProjects.length} projetos classificados como ${agreementLabel}; ${aepIds.length} IDs com AEP (${[...new Set(aepIds.map(project => project.instrumentType))].join(', ')}).`)
 
 console.log('Smoke test passed.')

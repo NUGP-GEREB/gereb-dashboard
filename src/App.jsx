@@ -8,7 +8,7 @@ import { ProjectManager } from "./components/ProjectManager";
 import { ProjectTable } from "./components/ProjectTable";
 import { ResourceDistribution } from "./components/ResourceDistribution";
 import fiocruzLogo from "./assets/marca-300x200_1.jpg";
-import { csvProjects, normalizeProjects } from "./data/projectCsv";
+import { csvProjects, normalizeInstrumentType, normalizeProjects } from "./data/projectCsv";
 import {
   brl,
   groupBySum,
@@ -20,7 +20,7 @@ import "./styles/dashboard.css";
 const allOption = "Todos";
 const supportOptions = [allOption, "Sim", "Não"];
 const ministryOfHealth = "MINISTÉRIO DA SAÚDE";
-const storageKey = "gereb-projects-editable-v4";
+const storageKey = "gereb-projects-editable-2026-10-20";
 const oldStorageKeys = ["gereb-projects-editable-v1", "gereb-projects-editable-v2", "gereb-projects-editable-v3"];
 const fullBrl = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -87,11 +87,6 @@ const instrumentColors = {
   "CARTA ACORDO": "#1B2D4A",
   "DISPENSA DE TED": "#0F4C8A",
 };
-
-function normalizeInstrumentType(value) {
-  if (value === "EMENDAS") return "EMENDA PARLAMENTAR";
-  return value || "Não informado";
-}
 
 const isTedProject = (project) =>
   normalizeInstrumentType(project.instrumentType) === "TED";
@@ -214,7 +209,6 @@ const tedCategoryOptions = [
 function App() {
   const [projects, setProjects] = useState(loadProjects);
   const [managerOpen, setManagerOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
     project: allOption,
     tedCategory: allOption,
@@ -585,32 +579,17 @@ function App() {
             <h1>Painel de Projetos GEREB</h1>
           </div>
           <div className="page-status" aria-label="Atualização do painel">
-            <span>Situação em junho/2026</span>
+            <span>Situação em 20/10/2026</span>
             <strong>{projectCountLabel}</strong>
           </div>
         </div>
       </section>
 
-      <section className="filter-shell" aria-label="Filtros da base GEREB">
+      <section className="filter-shell" aria-labelledby="portfolio-filters-title">
         <div className="filter-summary">
-          <div>
-            <strong>Filtros</strong>
-            <span>
-              {activeFilterCount
-                ? `${activeFilterCount} filtro${activeFilterCount > 1 ? "s" : ""} ativo${activeFilterCount > 1 ? "s" : ""}`
-                : "Nenhum filtro ativo"}
-            </span>
-          </div>
-          <button
-            type="button"
-            className="filter-toggle"
-            aria-expanded={filtersOpen}
-            onClick={() => setFiltersOpen((current) => !current)}
-          >
-            {filtersOpen ? "Ocultar" : "Mostrar"}
-          </button>
+          <h2 id="portfolio-filters-title">Carteira de Projetos da GEREB</h2>
         </div>
-        <div className={filtersOpen ? "filter-panel is-open" : "filter-panel"}>
+        <form className="filter-panel" onSubmit={(event) => event.preventDefault()}>
         <FilterSelect
           label="Projeto"
           value={filters.project}
@@ -670,14 +649,14 @@ function App() {
           />
         </label>
         <div className="filter-actions">
-          <button type="button" onClick={() => setFiltersOpen(false)}>
+          <button type="submit">
             Aplicar
           </button>
           <button type="button" onClick={resetFilters}>
             Limpar
           </button>
         </div>
-        </div>
+        </form>
       </section>
 
       <section className="dashboard-summary" aria-label="Resumo da carteira">
