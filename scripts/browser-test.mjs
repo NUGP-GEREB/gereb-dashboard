@@ -42,6 +42,17 @@ try {
   assert.equal(await page.locator('.filter-shell button[aria-expanded], .filter-toggle').count(), 0)
   assert.equal(await page.locator('.filter-panel select').count(), 7)
   await verifySelection(projects)
+  const axes = [...new Set(projects.map(item => item.axis))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+  assert.deepEqual(await filter('Eixo estratégico').locator('option').allTextContents(), ['Todos', ...axes])
+  const attentionAxis = 'Atenção, Promoção, Vigilâncias, Geração de Conhecimentos e Formação para o SUS'
+  const attentionProjects = projects.filter(item => item.axis === attentionAxis)
+  const axisRow = page.locator('.axis-overview__row').filter({ hasText: attentionAxis })
+  assert.equal(await axisRow.count(), 1)
+  assert.equal(clean(await axisRow.locator('strong').textContent()), clean(money.format(attentionProjects.reduce((sum, item) => sum + item.total, 0))))
+  await filter('Eixo estratégico').selectOption(attentionAxis)
+  await verifySelection(attentionProjects)
+  assert.equal(await page.locator('.axis-overview__row').count(), 1)
+  await page.getByRole('button', { name: 'Limpar', exact: true }).click()
   const types = [...new Set(projects.map(item => item.instrumentType))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
   assert.deepEqual(await filter('Instrumento').locator('option').allTextContents(), ['Todos', ...types])
   for (const type of types) {
@@ -78,9 +89,11 @@ try {
   // Isolated browser fixtures verify AEP handling without changing the source data.
   const agreement = 'ACORDO DE EXECUÇÃO DE PROJETOS'
   const fixture = projects.map((item, index) => ({ ...item,
+    axis: index === 0 ? attentionAxis.toUpperCase() : index === 1 ? ` ${attentionAxis.toLowerCase()}\u200b ` : item.axis,
     instrumentType: index === 0 ? ' aep\u200b ' : index === 1 ? 'acordo de execucao de projetos' : item.instrumentType }))
   await page.evaluate(data => localStorage.setItem('gereb-projects-editable-2026-10-20', JSON.stringify(data)), fixture)
   await page.reload()
+  assert.deepEqual(await filter('Eixo estratégico').locator('option').allTextContents(), ['Todos', ...axes])
   await filter('Instrumento').selectOption(agreement)
   const agreementItems = fixture.slice(0, 2).map(item => ({ ...item, instrumentType: agreement }))
   await verifySelection(agreementItems)

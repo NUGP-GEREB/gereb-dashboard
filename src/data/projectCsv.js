@@ -30,6 +30,35 @@ export function normalizeInstrumentType(value) {
   return instrumentAliases.get(instrumentKey(cleaned)) || cleaned || "Não informado";
 }
 
+const axisLabels = [
+  "Atenção, Promoção, Vigilâncias, Geração de Conhecimentos e Formação para o SUS",
+  "Ciência, Tecnologia, Saúde e Sociedade",
+  "Inovação E Complexo Produtivo Em Saúde",
+  "Saúde E Sustentabilidade Socioambiental",
+  "Saúde, Estado E Cooperação Internacional",
+  "Formação De Profissionais Para Saúde, Ciência, Tecnologia E Inovação",
+  "Atenção Em Saúde",
+  "Vigilância em saúde",
+  "Geração de Informação em Saúde",
+  "Realização De Pesquisa E Desenvolvimento Tecnológico Em Saúde",
+  "Produção De Insumos Estratégicos",
+  "Assistência A Órgãos Governamentais Na Gestão De Políticas Públicas",
+  "Popularização Da Ciência E Divulgação Científica",
+  "Fortalecimento de serviços tecnológicos especializados",
+];
+const axisKey = (value) => instrumentKey(value).toLocaleUpperCase("pt-BR");
+const axisAliases = new Map(axisLabels.map((label) => [axisKey(label), label]));
+
+export function normalizeAxis(value) {
+  const cleaned = String(value ?? "")
+    .normalize("NFC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return axisAliases.get(axisKey(cleaned)) || cleaned || "Não informado";
+}
+
 function parseCsv(text) {
   const rows = [];
   let row = [];
@@ -123,6 +152,7 @@ export function normalizeProjects(items) {
     ...project,
     item: index + 1,
     instrumentType: normalizeInstrumentType(project.instrumentType),
+    axis: normalizeAxis(project.axis),
     total: toNumber(project.total),
     budgetBalance:
       project.budgetBalance === undefined
