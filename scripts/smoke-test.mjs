@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises'
 const csvSource = await readFile(new URL('../projetos_fiotec_dashboard.csv', import.meta.url), 'utf8')
 const parserSource = await readFile(new URL('../src/data/projectCsv.js', import.meta.url), 'utf8')
 const moduleSource = parserSource.replace(/^import csvSource[^\n]*\n/, `const csvSource = ${JSON.stringify(csvSource)};\n`)
-const { csvProjects: projects, normalizeInstrumentType, normalizeProjects } = await import(`data:text/javascript;base64,${Buffer.from(moduleSource).toString('base64')}`)
+const { csvProjects: projects, normalizeInstrumentType, normalizeAxis, normalizeProjects } = await import(`data:text/javascript;base64,${Buffer.from(moduleSource).toString('base64')}`)
 
 function assert(condition, message) {
   if (!condition) {
@@ -48,6 +48,18 @@ assert(normalizeInstrumentType('  nova categoria  ') === 'NOVA CATEGORIA', 'Cate
 assert(normalizeInstrumentType(null) === 'Não informado', 'Tipos ausentes devem ter um rótulo seguro.')
 const normalizedAgain = normalizeProjects(projects)
 assert(JSON.stringify(normalizedAgain) === JSON.stringify(projects), 'A normalização repetida deve preservar os registros e valores.')
+const attentionAxis = 'Atenção, Promoção, Vigilâncias, Geração de Conhecimentos e Formação para o SUS'
+for (const value of [attentionAxis.toUpperCase(), attentionAxis.toLowerCase(), attentionAxis.normalize('NFD'), `  ${attentionAxis.replaceAll(' ', '\u00a0 ')}\u200b`, 'Atencao, Promocao, Vigilancias, Geracao de Conhecimentos e Formacao para o SUS']) {
+  assert(normalizeAxis(value) === attentionAxis, `Eixo não normalizado: ${value}`)
+}
+assert(normalizeAxis(null) === 'Não informado', 'Eixos ausentes devem ter um rótulo seguro.')
+assert(normalizeAxis('  Novo eixo  ') === 'Novo eixo', 'Eixos futuros devem ser preservados.')
+assert(new Set(projects.map(project => project.axis)).size === 14, 'Os eixos equivalentes devem formar 14 categorias únicas.')
+for (const [axis, count, cents] of [[attentionAxis, 83, 105058544505], ['Ciência, Tecnologia, Saúde e Sociedade', 33, 39566452101]]) {
+  const matching = projects.filter(project => project.axis === axis)
+  assert(matching.length === count, `O filtro de ${axis} deve incluir todas as variantes.`)
+  assert(matching.reduce((sum, project) => sum + Math.round(project.total * 100), 0) === cents, `Os valores das variantes de ${axis} devem ser somados.`)
+}
 assert(appSource.includes('Carteira de Projetos da GEREB'), 'O título institucional deve estar presente.')
 assert(!/filtersOpen|filter-toggle|Explorar projetos|Refinar a visão do painel/.test(appSource), 'O painel não deve conter controles ou textos antigos.')
 assert(!/filter-toggle|filter-panel\.is-open/.test(cssSource), 'Os estilos de recolhimento devem ser removidos.')
